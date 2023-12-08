@@ -7,7 +7,6 @@ import "monday-ui-react-core/dist/main.css";
 import InputForm from "./components/InputForm";
 import TabsUI from "./components/TabsUI";
 import { useTabs } from "./hooks/useTabs";
-import { useDataHooks } from "./hooks/useDataHooks";
 
 const monday = mondaySdk(); // Initializing the Monday SDK
 
@@ -44,9 +43,12 @@ const App = () => {
     }
   }, [context]);
 
-  const { fetchLinkColumnUrls } = useTabs(context, setTabsData);
-
-  const { handleUnfurl } = useDataHooks(url, tabsData, setTabsData);
+  const { handleUnfurl, fetchLinkColumnUrls } = useTabs(
+    context,
+    url,
+    tabsData,
+    setTabsData
+  );
 
   console.log("tabsData App==>", tabsData);
   console.log("context ==>", context);
