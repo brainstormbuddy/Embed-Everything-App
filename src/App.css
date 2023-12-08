@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.App {
+  height: 100vh;
+  text-align: center;
+}
+
+.input-container {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+  height: 100vh;
+  min-width: 50%;
+}
+
+input.input-field {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  width: 70%;
+}
+
+button.button {
+  padding: 0.5rem 1rem;
+  margin-left: 5px;
+}
+
+.iframe-container {
+  width: 100%;
+  height: 100%;
+}
+
+.error-container {
+  margin-top: 1rem;
+}
+
+.error {
+  color: red;
+}
+
+/* Monday.com Tab UI Style */
+.tabs-context--wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.tabs--wrapper {
+  padding-bottom: 10px;
+}
+
+.tabs--wrapper .tabs-list {
+  padding: unset;
+}
+
+.tab--wrapper .tab-inner {
+  padding: 0px 16px !important;
+}
+
+.tab-panels--wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 40px);
+}
+
+.tab-panels--wrapper .tab-panel.active {
+  display: flex !important;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
