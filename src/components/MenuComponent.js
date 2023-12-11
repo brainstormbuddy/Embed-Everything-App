@@ -10,7 +10,7 @@ import {
   Doc,
   Announcement,
 } from "monday-ui-react-core/icons";
-import "../css/MenuComponent.css"; // Import the CSS
+import "../css/MenuComponent.css";
 
 const MenuComponent = ({ monday }) => {
   const handleMenuItemClick = (action) => {

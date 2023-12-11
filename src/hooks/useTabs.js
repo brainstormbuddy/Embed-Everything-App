@@ -1,8 +1,9 @@
 // Importing necessary hooks and utilities from React and local files
 import { useCallback } from "react";
 import { fetchBoardData, fetchIframelyData } from "../helpers/api";
+import { generateStorageKey } from "../helpers/utils";
+import { saveTabsData } from "../helpers/storage";
 
-// Defining a custom hook called useDataHooks
 export const useTabs = (
   context,
   url,
@@ -12,6 +13,8 @@ export const useTabs = (
   editUrl,
   editName
 ) => {
+  const storageKey = generateStorageKey(context);
+
   const handleUnfurl = useCallback(
     async (urlToUnfurl) => {
       // Checking if the URL is empty
@@ -46,13 +49,13 @@ export const useTabs = (
           },
         ]);
 
-        // await saveTabsData(storageKey, tabsData);
+        await saveTabsData(storageKey, tabsData);
       } catch (error) {
         console.log(error);
       }
     },
     // Specifying dependencies for the useCallback hook
-    [url, setTabsData, tabsData.length]
+    [url, storageKey, tabsData, setTabsData]
   );
 
   // The fetchLinkColumnUrls function is a memoized function that fetches URLs from link columns.
@@ -112,11 +115,12 @@ export const useTabs = (
         label: "Add",
       });
       await setTabsData(tabsData);
+      await saveTabsData(storageKey, tabsData);
     } catch (error) {
       // Set error state and log error to console if any part of the process fails.
       console.error(error);
     }
-  }, [context, setTabsData]); // Dependencies for useCallback
+  }, [context, storageKey, setTabsData]); // Dependencies for useCallback
 
   const handleEditUrl = useCallback(async () => {
     try {
@@ -137,13 +141,22 @@ export const useTabs = (
           url: editUrl,
           iframeSrc: iframeData,
         };
-        setTabsData(updatedTabsData);
+        await setTabsData(updatedTabsData);
+        await saveTabsData(storageKey, updatedTabsData);
       }
     } catch (error) {
       // Set error state and log error to console if any part of the process fails.
       console.error(error);
     }
-  }, [tabsData, activeTabData, editUrl, setTabsData]);
+  }, [
+    tabsData,
+    activeTabData.mode,
+    activeTabData.label,
+    activeTabData.url,
+    editUrl,
+    setTabsData,
+    storageKey,
+  ]);
 
   const handleEditName = useCallback(async () => {
     try {
@@ -160,25 +173,36 @@ export const useTabs = (
         updatedTabsData[indexToUpdate] = {
           mode: activeTabData.mode,
           label: editName,
-          url: activeTabData.url,
+          url: activeTabData?.url,
           iframeSrc: activeTabData.iframeSrc,
         };
-        setTabsData(updatedTabsData);
+        await setTabsData(updatedTabsData);
+        await saveTabsData(storageKey, updatedTabsData);
       }
     } catch (error) {
       // Set error state and log error to console if any part of the process fails.
       console.error(error);
     }
-  }, [tabsData, activeTabData, editName, setTabsData]);
+  }, [
+    tabsData,
+    activeTabData.mode,
+    activeTabData.label,
+    activeTabData.url,
+    activeTabData.iframeSrc,
+    editName,
+    setTabsData,
+    storageKey,
+  ]);
 
   const handleDeleteTab = useCallback(async () => {
     try {
       const updatedTabsData = tabsData.filter((tab) => tab !== activeTabData);
-      setTabsData(updatedTabsData);
+      await setTabsData(updatedTabsData);
+      await saveTabsData(storageKey, updatedTabsData);
     } catch (error) {
       console.log(error);
     }
-  }, [tabsData, activeTabData, setTabsData]);
+  }, [tabsData, setTabsData, storageKey, activeTabData]);
 
   return {
     handleUnfurl,

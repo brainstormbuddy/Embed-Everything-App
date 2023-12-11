@@ -1,15 +1,7 @@
 // src/App.js
 import React, { useState, useEffect } from "react";
-import "./App.css";
+
 import mondaySdk from "monday-sdk-js";
-import "monday-ui-react-core/tokens";
-import "monday-ui-react-core/dist/main.css";
-
-import InputForm from "./components/InputForm";
-import TabsUI from "./components/TabsUI";
-import MenuComponent from "./components/MenuComponent";
-import { useTabs } from "./hooks/useTabs";
-
 import {
   Modal,
   ModalContent,
@@ -17,11 +9,22 @@ import {
   TextField,
 } from "monday-ui-react-core";
 
+import "monday-ui-react-core/tokens";
+
+import InputForm from "./components/InputForm";
+import TabsUI from "./components/TabsUI";
+import MenuComponent from "./components/MenuComponent";
+
+import { useTabs } from "./hooks/useTabs";
+import { generateStorageKey } from "./helpers/utils";
+import { getTabsData } from "./helpers/storage";
+
+import "monday-ui-react-core/dist/main.css";
+import "./App.css";
+
 const monday = mondaySdk(); // Initializing the Monday SDK
 
-// Main App component
 const App = () => {
-  // Defining state variables using the useState hook
   const [context, setContext] = useState(null); // State to hold the context object from Monday SDK
   const [activeTabData, setActiveTabData] = useState([]);
   const [tabsData, setTabsData] = useState([]); // State to store tab labels and iframe sources
@@ -30,7 +33,7 @@ const App = () => {
   const [showEditUrlModal, setShowEditUrlModal] = useState(false);
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [showDeleteTabModal, setShowDeleteTabModal] = useState(false);
-  const [editUrl, setEditUrl] = useState(activeTabData?.url);
+  const [editUrl, setEditUrl] = useState("");
   const [editName, setEditName] = useState("");
 
   // useEffect hook to execute certain operations on component mount
@@ -57,6 +60,27 @@ const App = () => {
           break; // Default case (do nothing)
       }
     }
+
+    async function getTabsFromStorage() {
+      try {
+        const storageKey = generateStorageKey(context);
+        const tabsString = await getTabsData(storageKey);
+        if (tabsString) {
+          const tabs = JSON.parse(tabsString);
+          console.log("Tabs retrieved from Monday storage:", tabs);
+          setTabsData(tabs);
+          return tabs;
+        } else {
+          console.log("No tabs found in Monday storage.");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error getting tabs from Monday storage:", error);
+        return [];
+      }
+    }
+
+    getTabsFromStorage();
   }, [context]);
 
   const {
@@ -74,9 +98,6 @@ const App = () => {
     editUrl,
     editName
   );
-
-  console.log("tabsData App==>", tabsData);
-  console.log("context ==>", context);
 
   return (
     <div className="App">

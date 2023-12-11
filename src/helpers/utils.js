@@ -1,5 +1,4 @@
 // src/helpers/utils.js
 export const generateStorageKey = (context) => {
-  const { instanceType, boardId, itemId } = context;
-  return `tabsData-${instanceType}-${boardId}-${itemId}}`;
+  return `tabsData-${context?.account?.id}-${context?.instanceType}-${context?.boardId}-${context?.itemId}}`;
 };
