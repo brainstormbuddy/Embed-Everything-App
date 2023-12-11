@@ -39,7 +39,7 @@ export const useTabs = (
           ...previousData.slice(0, -1),
           {
             mode: "edit",
-            label: `Tab-${tabsData.length - 1}`,
+            label: `Tab-${tabsData.length === 0 ? 0 : tabsData.length - 1}`,
             url: url,
             iframeSrc: iframeData,
           },
