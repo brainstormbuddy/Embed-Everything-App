@@ -3,7 +3,15 @@ import { useCallback } from "react";
 import { fetchBoardData, fetchIframelyData } from "../helpers/api";
 
 // Defining a custom hook called useDataHooks
-export const useTabs = (context, url, tabsData, setTabsData) => {
+export const useTabs = (
+  context,
+  url,
+  tabsData,
+  setTabsData,
+  activeTabData,
+  editUrl,
+  editName
+) => {
   const handleUnfurl = useCallback(
     async (urlToUnfurl) => {
       // Checking if the URL is empty
@@ -27,7 +35,7 @@ export const useTabs = (context, url, tabsData, setTabsData) => {
         await setTabsData((previousData) => [
           ...previousData.slice(0, -1),
           {
-            mode: "write",
+            mode: "edit",
             label: `Tab-${tabsData.length - 1}`,
             url: url,
             iframeSrc: iframeData,
@@ -110,5 +118,73 @@ export const useTabs = (context, url, tabsData, setTabsData) => {
     }
   }, [context, setTabsData]); // Dependencies for useCallback
 
-  return { handleUnfurl, fetchLinkColumnUrls };
+  const handleEditUrl = useCallback(async () => {
+    try {
+      const indexToUpdate = tabsData.findIndex(
+        (tab) =>
+          tab.mode === activeTabData.mode &&
+          tab.label === activeTabData.label &&
+          tab.url === activeTabData.url
+      );
+
+      if (indexToUpdate !== -1) {
+        const iframeData = await fetchIframelyData(editUrl);
+        // Create a copy of tabsData and replace the item at the found index with activeTabData
+        const updatedTabsData = [...tabsData];
+        updatedTabsData[indexToUpdate] = {
+          mode: activeTabData.mode,
+          label: activeTabData.label,
+          url: editUrl,
+          iframeSrc: iframeData,
+        };
+        setTabsData(updatedTabsData);
+      }
+    } catch (error) {
+      // Set error state and log error to console if any part of the process fails.
+      console.error(error);
+    }
+  }, [tabsData, activeTabData, editUrl, setTabsData]);
+
+  const handleEditName = useCallback(async () => {
+    try {
+      const indexToUpdate = tabsData.findIndex(
+        (tab) =>
+          tab.mode === activeTabData.mode &&
+          tab.label === activeTabData.label &&
+          tab.url === activeTabData.url
+      );
+
+      if (indexToUpdate !== -1) {
+        // Create a copy of tabsData and replace the item at the found index with activeTabData
+        const updatedTabsData = [...tabsData];
+        updatedTabsData[indexToUpdate] = {
+          mode: activeTabData.mode,
+          label: editName,
+          url: activeTabData.url,
+          iframeSrc: activeTabData.iframeSrc,
+        };
+        setTabsData(updatedTabsData);
+      }
+    } catch (error) {
+      // Set error state and log error to console if any part of the process fails.
+      console.error(error);
+    }
+  }, [tabsData, activeTabData, editName, setTabsData]);
+
+  const handleDeleteTab = useCallback(async () => {
+    try {
+      const updatedTabsData = tabsData.filter((tab) => tab !== activeTabData);
+      setTabsData(updatedTabsData);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [tabsData, activeTabData, setTabsData]);
+
+  return {
+    handleUnfurl,
+    fetchLinkColumnUrls,
+    handleEditUrl,
+    handleEditName,
+    handleDeleteTab,
+  };
 };
