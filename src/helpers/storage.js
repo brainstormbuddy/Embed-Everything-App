@@ -20,15 +20,14 @@ export const saveTabsData = async (key, tabsData) => {
 
 export const getTabsData = async (key) => {
   try {
-    const response = await monday.storage.instance.getItem(key);
-    console.log("Retrieved TabsData:", key, response);
-    if (response.data && response.data.success) {
-      return response.data.value ? JSON.parse(response.data.value) : null;
-    } else {
-      console.error("Error retrieving TabsData:", response);
-    }
+    return await monday.storage.instance.getItem(key).then((res) => {
+      if (res.data && res.data.success) {
+        return res.data.value ? JSON.parse(res.data.value) : null;
+      } else {
+        console.error("Error retrieving TabsData:", res);
+      }
+    });
   } catch (error) {
     console.error("Exception encountered while retrieving TabsData:", error);
   }
-  return null; // Return null if retrieval was unsuccessful or an exception occurred
 };
