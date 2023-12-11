@@ -33,10 +33,14 @@ const TabsUI = ({
   setShowDeleteTabModal,
 }) => {
   return (
-    <TabsContext>
-      <TabList id="tab-list">
+    <TabsContext className="tabs-context--wrapper">
+      <TabList className="tabs-list--wrapper">
         {tabsData.map((tabData, index) => (
-          <Tab key={index} onClick={() => setActiveTabData(tabData)}>
+          <Tab
+            tabInnerClassName="tab-inner"
+            key={index}
+            onClick={() => setActiveTabData(tabData)}
+          >
             {tabData.label}
             {tabData.mode !== "add" && (
               <MenuButton
@@ -87,9 +91,9 @@ const TabsUI = ({
           </Tab>
         ))}
       </TabList>
-      <TabPanels>
+      <TabPanels className="tab-panels--wrapper">
         {tabsData.map((tabData, index) => (
-          <TabPanel key={index}>
+          <TabPanel className="tab-panel--wrapper" key={index}>
             {tabData?.mode === "add" ? (
               <InputForm // Rendering InputForm component
                 url={url} // Passing url state as prop

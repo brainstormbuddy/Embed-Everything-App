@@ -101,7 +101,8 @@ const App = () => {
 
   return (
     <div className="App">
-      {tabsData.length === 0 ? (
+      {tabsData.length === 0 ||
+      (tabsData?.length === 1 && tabsData[0]?.mode === "add") ? (
         <InputForm
           url={url}
           handleUrlChange={setUrl}

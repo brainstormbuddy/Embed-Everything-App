@@ -2,7 +2,7 @@ import React from "react";
 
 const IframeDisplay = ({ iframeSrc }) => {
   return !iframeSrc ? (
-    <div>Embed not available</div>
+    <div className="no-iframe-section">Embed not available</div>
   ) : (
     <div
       className="iframe-container"
