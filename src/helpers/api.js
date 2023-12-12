@@ -30,5 +30,5 @@ export const fetchIframelyData = async (url) => {
   );
   const data = await response.json();
   console.log("PG_EA:: fetchIframelyData", data);
-  return data.html;
+  return data;
 };

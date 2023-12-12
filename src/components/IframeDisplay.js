@@ -1,8 +1,16 @@
 import React from "react";
 
-const IframeDisplay = ({ iframeSrc }) => {
+const IframeDisplay = ({ context, iframeSrc }) => {
+  const theme = context?.theme;
+
   return !iframeSrc ? (
-    <div className="no-iframe-section">Embed not available</div>
+    <div
+      className={
+        theme === "light" ? "no-iframe-section" : "no-iframe-section-dark"
+      }
+    >
+      Embed not available
+    </div>
   ) : (
     <div
       className="iframe-container"

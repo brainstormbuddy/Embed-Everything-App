@@ -34,18 +34,19 @@ export const useTabs = (
 
       try {
         const iframeData = await fetchIframelyData(url);
+        const label = iframeData !== undefined ? iframeData?.meta?.title : url;
 
         await setTabsData((previousData) => [
           ...previousData.slice(0, -1),
           {
             mode: "edit",
-            label: `Tab-${tabsData.length === 0 ? 0 : tabsData.length - 1}`,
+            label: label,
             url: url,
-            iframeSrc: iframeData,
+            iframeSrc: iframeData?.html,
           },
           {
             mode: "add",
-            label: "Add",
+            label: "+",
           },
         ]);
 
@@ -91,7 +92,7 @@ export const useTabs = (
         if (linkColumnValue && linkColumnValue.text) {
           // Extract URL from the text property of linkColumnValue.
           const textSegments = linkColumnValue.text.split(" - ");
-          const label = textSegments[0];
+          const label = linkColumn.title;
           const url = textSegments[textSegments.length - 1];
           const iframeData = await fetchIframelyData(url);
 
@@ -99,7 +100,7 @@ export const useTabs = (
             mode: "read",
             label: label,
             url: url,
-            iframeSrc: iframeData,
+            iframeSrc: iframeData?.html,
           });
           // If existing tab data is found, update tabsData state without fetching.
         } else {
@@ -112,7 +113,7 @@ export const useTabs = (
       await Promise.all(linkDataPromises);
       await tabsData.push({
         mode: "add",
-        label: "Add",
+        label: "+",
       });
       await setTabsData(tabsData);
       await saveTabsData(storageKey, tabsData);
@@ -133,13 +134,14 @@ export const useTabs = (
 
       if (indexToUpdate !== -1) {
         const iframeData = await fetchIframelyData(editUrl);
+        const label = iframeData !== undefined ? iframeData?.meta?.title : url;
         // Create a copy of tabsData and replace the item at the found index with activeTabData
         const updatedTabsData = [...tabsData];
         updatedTabsData[indexToUpdate] = {
           mode: activeTabData.mode,
-          label: activeTabData.label,
+          label: label,
           url: editUrl,
-          iframeSrc: iframeData,
+          iframeSrc: iframeData?.html,
         };
         await setTabsData(updatedTabsData);
         await saveTabsData(storageKey, updatedTabsData);

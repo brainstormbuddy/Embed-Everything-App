@@ -1,6 +1,8 @@
 import React from "react";
 
 import {
+  Dialog,
+  DialogContentContainer,
   TabsContext,
   TabList,
   Tab,
@@ -8,7 +10,6 @@ import {
   TabPanel,
   MenuButton,
   Menu,
-  MenuTitle,
   MenuItem,
   MenuDivider,
 } from "monday-ui-react-core";
@@ -23,6 +24,7 @@ import InputForm from "./InputForm";
 import IframeDisplay from "./IframeDisplay";
 
 const TabsUI = ({
+  context,
   tabsData,
   setActiveTabData,
   url,
@@ -32,60 +34,93 @@ const TabsUI = ({
   setShowEditNameModal,
   setShowDeleteTabModal,
 }) => {
+  const theme = context?.theme;
+
   return (
     <TabsContext className="tabs-context--wrapper">
       <TabList className="tabs-list--wrapper">
         {tabsData.map((tabData, index) => (
           <Tab
-            tabInnerClassName="tab-inner"
+            className="tab--wrapper"
+            tabInnerClassName={
+              theme === "light" ? "tab-inner" : "tab-inner-dark"
+            }
             key={index}
             onClick={() => setActiveTabData(tabData)}
           >
-            {tabData.label}
+            <p className="tab-label--wrapper">{tabData.label}</p>
             {tabData.mode !== "add" && (
               <MenuButton
-                onMenuHide={() => console.log("Menu hidden")}
-                onMenuShow={() => console.log("Menu shown")}
+                className={
+                  theme === "light"
+                    ? "menu-button--wrapper"
+                    : "menu-button--wrapper-dark"
+                }
               >
-                <Menu id="menu" size="medium">
-                  <MenuTitle caption="Tab" captionPosition="top" />
-                  {tabData.mode === "edit" && (
-                    <MenuItem
-                      icon={Edit}
-                      iconType="SVG"
-                      onClick={() => {
-                        setShowEditUrlModal(true);
-                      }}
-                      title="Edit URL"
-                    />
-                  )}
-                  <MenuItem
-                    icon={ExternalPage}
-                    iconType="SVG"
-                    onClick={() => {
-                      window.open(tabData?.url, "_blank");
-                    }}
-                    title="Open URL in new tab"
-                  />
-                  {tabData.mode === "edit" && <MenuDivider />}
-                  {tabData.mode === "edit" && (
-                    <MenuItem
-                      icon={ItemDefaultValues}
-                      iconType="SVG"
-                      onClick={() => setShowEditNameModal(true)}
-                      title="Rename"
-                    />
-                  )}
-                  {tabData.mode === "edit" && <MenuDivider />}
-                  {tabData.mode === "edit" && (
-                    <MenuItem
-                      icon={Delete}
-                      iconType="SVG"
-                      onClick={() => setShowDeleteTabModal(true)}
-                      title="Delete"
-                    />
-                  )}
-                </Menu>
+                <div>
+                  <DialogContentContainer
+                    className={
+                      theme === "dark" && "dialog-content--wrapper-dark"
+                    }
+                  >
+                    <Menu
+                      id="menu"
+                      size="medium"
+                      className={
+                        theme === "dark" && "dialog-content--wrapper-dark"
+                      }
+                    >
+                      {tabData.mode === "edit" && (
+                        <MenuItem
+                          className={
+                            theme === "dark" && "menu-item--wrapper-dark"
+                          }
+                          icon={Edit}
+                          iconType="SVG"
+                          onClick={() => {
+                            setShowEditUrlModal(true);
+                          }}
+                          title="Edit URL"
+                        />
+                      )}
+                      <MenuItem
+                        className={
+                          theme === "dark" && "menu-item--wrapper-dark"
+                        }
+                        icon={ExternalPage}
+                        iconType="SVG"
+                        onClick={() => {
+                          window.open(tabData?.url, "_blank");
+                        }}
+                        title="Open URL in new tab"
+                      />
+                      {tabData.mode === "edit" && <MenuDivider />}
+                      {tabData.mode === "edit" && (
+                        <MenuItem
+                          className={
+                            theme === "dark" && "menu-item--wrapper-dark"
+                          }
+                          icon={ItemDefaultValues}
+                          iconType="SVG"
+                          onClick={() => setShowEditNameModal(true)}
+                          title="Rename"
+                        />
+                      )}
+                      {tabData.mode === "edit" && <MenuDivider />}
+                      {tabData.mode === "edit" && (
+                        <MenuItem
+                          className={
+                            theme === "dark" && "menu-item--wrapper-dark"
+                          }
+                          icon={Delete}
+                          iconType="SVG"
+                          onClick={() => setShowDeleteTabModal(true)}
+                          title="Delete"
+                        />
+                      )}
+                    </Menu>
+                  </DialogContentContainer>
+                </div>
               </MenuButton>
             )}
           </Tab>
@@ -95,13 +130,14 @@ const TabsUI = ({
         {tabsData.map((tabData, index) => (
           <TabPanel className="tab-panel--wrapper" key={index}>
             {tabData?.mode === "add" ? (
-              <InputForm // Rendering InputForm component
+              <InputForm
+                context={context}
                 url={url} // Passing url state as prop
                 handleUrlChange={setUrl} // Passing setUrl function as prop to handle URL changes
                 handleUnfurl={() => handleUnfurl(url)} // Passing handleUnfurl function as prop to handle unfurl action
               />
             ) : (
-              <IframeDisplay iframeSrc={tabData.iframeSrc} />
+              <IframeDisplay context={context} iframeSrc={tabData.iframeSrc} />
             )}
           </TabPanel>
         ))}

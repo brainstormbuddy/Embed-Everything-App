@@ -104,12 +104,14 @@ const App = () => {
       {tabsData.length === 0 ||
       (tabsData?.length === 1 && tabsData[0]?.mode === "add") ? (
         <InputForm
+          context={context}
           url={url}
           handleUrlChange={setUrl}
           handleUnfurl={() => handleUnfurl(url)}
         />
       ) : (
         <TabsUI
+          context={context}
           tabsData={tabsData}
           setActiveTabData={setActiveTabData}
           url={url}
