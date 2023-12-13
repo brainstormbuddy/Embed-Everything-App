@@ -116,13 +116,15 @@ const App = () => {
           setActiveTabData={setActiveTabData}
           url={url}
           setUrl={setUrl}
+          setEditUrl={setEditUrl}
+          setEditName={setEditName}
           handleUnfurl={handleUnfurl}
           setShowEditUrlModal={setShowEditUrlModal}
           setShowEditNameModal={setShowEditNameModal}
           setShowDeleteTabModal={setShowDeleteTabModal}
         />
       )}
-      <MenuComponent monday={monday} />
+      <MenuComponent monday={monday} context={context} />
 
       {/* Edit URL Modal  */}
       <Modal

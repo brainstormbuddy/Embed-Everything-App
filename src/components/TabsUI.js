@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-  Dialog,
   DialogContentContainer,
   TabsContext,
   TabList,
@@ -29,6 +28,8 @@ const TabsUI = ({
   setActiveTabData,
   url,
   setUrl,
+  setEditUrl,
+  setEditName,
   handleUnfurl,
   setShowEditUrlModal,
   setShowEditNameModal,
@@ -57,70 +58,61 @@ const TabsUI = ({
                     : "menu-button--wrapper-dark"
                 }
               >
-                <div>
-                  <DialogContentContainer
-                    className={
-                      theme === "dark" && "dialog-content--wrapper-dark"
-                    }
-                  >
-                    <Menu
-                      id="menu"
-                      size="medium"
-                      className={
-                        theme === "dark" && "dialog-content--wrapper-dark"
-                      }
-                    >
-                      {tabData.mode === "edit" && (
-                        <MenuItem
-                          className={
-                            theme === "dark" && "menu-item--wrapper-dark"
-                          }
-                          icon={Edit}
-                          iconType="SVG"
-                          onClick={() => {
-                            setShowEditUrlModal(true);
-                          }}
-                          title="Edit URL"
-                        />
-                      )}
-                      <MenuItem
-                        className={
-                          theme === "dark" && "menu-item--wrapper-dark"
-                        }
-                        icon={ExternalPage}
-                        iconType="SVG"
-                        onClick={() => {
-                          window.open(tabData?.url, "_blank");
-                        }}
-                        title="Open URL in new tab"
-                      />
-                      {tabData.mode === "edit" && <MenuDivider />}
-                      {tabData.mode === "edit" && (
-                        <MenuItem
-                          className={
-                            theme === "dark" && "menu-item--wrapper-dark"
-                          }
-                          icon={ItemDefaultValues}
-                          iconType="SVG"
-                          onClick={() => setShowEditNameModal(true)}
-                          title="Rename"
-                        />
-                      )}
-                      {tabData.mode === "edit" && <MenuDivider />}
-                      {tabData.mode === "edit" && (
-                        <MenuItem
-                          className={
-                            theme === "dark" && "menu-item--wrapper-dark"
-                          }
-                          icon={Delete}
-                          iconType="SVG"
-                          onClick={() => setShowDeleteTabModal(true)}
-                          title="Delete"
-                        />
-                      )}
-                    </Menu>
-                  </DialogContentContainer>
-                </div>
+                <Menu
+                  className={
+                    theme === "light"
+                      ? "dialog-content--wrapper"
+                      : "dialog-content--wrapper-dark"
+                  }
+                  id="menu"
+                  size="medium"
+                  tabIndex="-1"
+                >
+                  {tabData.mode === "edit" && (
+                    <MenuItem
+                      className={theme === "dark" && "menu-item--wrapper-dark"}
+                      icon={Edit}
+                      iconType="SVG"
+                      onClick={() => {
+                        setEditUrl(tabData?.url);
+                        setShowEditUrlModal(true);
+                      }}
+                      title="Edit URL"
+                    />
+                  )}
+                  <MenuItem
+                    className={theme === "dark" && "menu-item--wrapper-dark"}
+                    icon={ExternalPage}
+                    iconType="SVG"
+                    onClick={() => {
+                      window.open(tabData?.url, "_blank");
+                    }}
+                    title="Open URL in new tab"
+                  />
+                  {tabData.mode === "edit" && <MenuDivider />}
+                  {tabData.mode === "edit" && (
+                    <MenuItem
+                      className={theme === "dark" && "menu-item--wrapper-dark"}
+                      icon={ItemDefaultValues}
+                      iconType="SVG"
+                      onClick={() => {
+                        setEditName(tabData?.label);
+                        setShowEditNameModal(true);
+                      }}
+                      title="Rename"
+                    />
+                  )}
+                  {tabData.mode === "edit" && <MenuDivider />}
+                  {tabData.mode === "edit" && (
+                    <MenuItem
+                      className={theme === "dark" && "menu-item--wrapper-dark"}
+                      icon={Delete}
+                      iconType="SVG"
+                      onClick={() => setShowDeleteTabModal(true)}
+                      title="Delete"
+                    />
+                  )}
+                </Menu>
               </MenuButton>
             )}
           </Tab>

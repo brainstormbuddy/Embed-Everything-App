@@ -132,17 +132,24 @@ button.button {
   background-color: revert !important;
 }
 
-.typePopover_e9b40efd25 {
+/* .typePopover_e9b40efd25 {
   background-color: revert !important;
+} */
+
+.dialog-content--wrapper {
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .dialog-content--wrapper-dark {
   background-color: #30324e !important;
+  border-radius: 8px;
+  padding: 4px;
 }
 
-.dialog-content--wrapper-dark + div {
+/* .dialog-content--wrapper-dark + div {
   background-color: revert !important;
-}
+} */
 
 .menu-item--wrapper-dark {
   color: #d5d8df !important;
