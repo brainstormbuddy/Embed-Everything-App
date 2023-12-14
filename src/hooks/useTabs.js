@@ -34,7 +34,8 @@ export const useTabs = (
 
       try {
         const iframeData = await fetchIframelyData(url);
-        const label = iframeData !== undefined ? iframeData?.meta?.title : url;
+
+        const label = iframeData.error ? url : iframeData?.meta?.title;
 
         await setTabsData((previousData) => [
           ...previousData.slice(0, -1),
@@ -56,7 +57,7 @@ export const useTabs = (
       }
     },
     // Specifying dependencies for the useCallback hook
-    [url, storageKey, tabsData, setTabsData]
+    [storageKey, url, tabsData, setTabsData]
   );
 
   // The fetchLinkColumnUrls function is a memoized function that fetches URLs from link columns.
@@ -115,13 +116,15 @@ export const useTabs = (
         mode: "add",
         label: "+",
       });
+
       await setTabsData(tabsData);
-      await saveTabsData(storageKey, tabsData);
+
+      console.log("fetchLinkColumnUrls Tabs Data Called");
     } catch (error) {
       // Set error state and log error to console if any part of the process fails.
       console.error(error);
     }
-  }, [context, storageKey, setTabsData]); // Dependencies for useCallback
+  }, [context, setTabsData]); // Dependencies for useCallback
 
   const handleEditUrl = useCallback(async () => {
     try {
@@ -134,7 +137,7 @@ export const useTabs = (
 
       if (indexToUpdate !== -1) {
         const iframeData = await fetchIframelyData(editUrl);
-        const label = iframeData !== undefined ? iframeData?.meta?.title : url;
+        const label = iframeData.error ? url : iframeData?.meta?.title;
         // Create a copy of tabsData and replace the item at the found index with activeTabData
         const updatedTabsData = [...tabsData];
         updatedTabsData[indexToUpdate] = {
@@ -151,13 +154,14 @@ export const useTabs = (
       console.error(error);
     }
   }, [
+    storageKey,
     tabsData,
     activeTabData.mode,
     activeTabData.label,
     activeTabData.url,
     editUrl,
+    url,
     setTabsData,
-    storageKey,
   ]);
 
   const handleEditName = useCallback(async () => {
@@ -186,6 +190,7 @@ export const useTabs = (
       console.error(error);
     }
   }, [
+    storageKey,
     tabsData,
     activeTabData.mode,
     activeTabData.label,
@@ -193,18 +198,18 @@ export const useTabs = (
     activeTabData.iframeSrc,
     editName,
     setTabsData,
-    storageKey,
   ]);
 
   const handleDeleteTab = useCallback(async () => {
     try {
       const updatedTabsData = tabsData.filter((tab) => tab !== activeTabData);
       await setTabsData(updatedTabsData);
+
       await saveTabsData(storageKey, updatedTabsData);
     } catch (error) {
       console.log(error);
     }
-  }, [tabsData, setTabsData, storageKey, activeTabData]);
+  }, [storageKey, tabsData, setTabsData, activeTabData]);
 
   return {
     handleUnfurl,

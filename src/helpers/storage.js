@@ -1,10 +1,6 @@
 import mondaySdk from "monday-sdk-js";
 
-const monday = mondaySdk();
-const MONDAY_API_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjMwMDkxMDI4NSwiYWFpIjoxMSwidWlkIjo1Mjc0Nzc1MywiaWFkIjoiMjAyMy0xMi0wNlQwMDo1OTowMi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjAxMzQ1OTEsInJnbiI6ImV1YzEifQ.9IH0y_PFnCBVJmPJXyjpjYQG5Rsq4UVDPu-8icjez4Q";
-
-monday.setToken(MONDAY_API_TOKEN);
+const monday = mondaySdk(); // Initializing the Monday SDK
 
 export const saveTabsData = async (key, tabsData) => {
   return await monday.storage.instance

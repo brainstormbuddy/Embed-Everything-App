@@ -1,16 +1,9 @@
 import React from "react";
+import { Text } from "monday-ui-react-core";
 
-const IframeDisplay = ({ context, iframeSrc }) => {
-  const theme = context?.theme;
-
+const IframeDisplay = ({ iframeSrc }) => {
   return !iframeSrc ? (
-    <div
-      className={
-        theme === "light" ? "no-iframe-section" : "no-iframe-section-dark"
-      }
-    >
-      Embed not available
-    </div>
+    <Text className="no-iframe-section">Embed not available</Text>
   ) : (
     <div
       className="iframe-container"

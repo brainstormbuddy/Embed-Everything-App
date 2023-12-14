@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-  DialogContentContainer,
   TabsContext,
   TabList,
   Tab,
@@ -23,7 +22,6 @@ import InputForm from "./InputForm";
 import IframeDisplay from "./IframeDisplay";
 
 const TabsUI = ({
-  context,
   tabsData,
   setActiveTabData,
   url,
@@ -35,42 +33,27 @@ const TabsUI = ({
   setShowEditNameModal,
   setShowDeleteTabModal,
 }) => {
-  const theme = context?.theme;
-
   return (
     <TabsContext className="tabs-context--wrapper">
       <TabList className="tabs-list--wrapper">
         {tabsData.map((tabData, index) => (
           <Tab
             className="tab--wrapper"
-            tabInnerClassName={
-              theme === "light" ? "tab-inner" : "tab-inner-dark"
-            }
+            tabInnerClassName="tab-inner"
             key={index}
             onClick={() => setActiveTabData(tabData)}
           >
             <p className="tab-label--wrapper">{tabData.label}</p>
             {tabData.mode !== "add" && (
-              <MenuButton
-                className={
-                  theme === "light"
-                    ? "menu-button--wrapper"
-                    : "menu-button--wrapper-dark"
-                }
-              >
+              <MenuButton className="menu-button--wrapper">
                 <Menu
-                  className={
-                    theme === "light"
-                      ? "dialog-content--wrapper"
-                      : "dialog-content--wrapper-dark"
-                  }
+                  className="dialog-content--wrapper"
                   id="menu"
                   size="medium"
                   tabIndex="-1"
                 >
                   {tabData.mode === "edit" && (
                     <MenuItem
-                      className={theme === "dark" && "menu-item--wrapper-dark"}
                       icon={Edit}
                       iconType="SVG"
                       onClick={() => {
@@ -81,7 +64,6 @@ const TabsUI = ({
                     />
                   )}
                   <MenuItem
-                    className={theme === "dark" && "menu-item--wrapper-dark"}
                     icon={ExternalPage}
                     iconType="SVG"
                     onClick={() => {
@@ -92,7 +74,6 @@ const TabsUI = ({
                   {tabData.mode === "edit" && <MenuDivider />}
                   {tabData.mode === "edit" && (
                     <MenuItem
-                      className={theme === "dark" && "menu-item--wrapper-dark"}
                       icon={ItemDefaultValues}
                       iconType="SVG"
                       onClick={() => {
@@ -105,7 +86,6 @@ const TabsUI = ({
                   {tabData.mode === "edit" && <MenuDivider />}
                   {tabData.mode === "edit" && (
                     <MenuItem
-                      className={theme === "dark" && "menu-item--wrapper-dark"}
                       icon={Delete}
                       iconType="SVG"
                       onClick={() => setShowDeleteTabModal(true)}
@@ -123,13 +103,12 @@ const TabsUI = ({
           <TabPanel className="tab-panel--wrapper" key={index}>
             {tabData?.mode === "add" ? (
               <InputForm
-                context={context}
                 url={url} // Passing url state as prop
                 handleUrlChange={setUrl} // Passing setUrl function as prop to handle URL changes
                 handleUnfurl={() => handleUnfurl(url)} // Passing handleUnfurl function as prop to handle unfurl action
               />
             ) : (
-              <IframeDisplay context={context} iframeSrc={tabData.iframeSrc} />
+              <IframeDisplay iframeSrc={tabData.iframeSrc} />
             )}
           </TabPanel>
         ))}

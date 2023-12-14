@@ -59,28 +59,35 @@ const App = () => {
         default:
           break; // Default case (do nothing)
       }
-    }
 
-    async function getTabsFromStorage() {
-      try {
-        const storageKey = generateStorageKey(context);
-        const tabsString = await getTabsData(storageKey);
-        if (tabsString) {
-          const tabs = JSON.parse(tabsString);
-          console.log("Tabs retrieved from Monday storage:", tabs);
-          setTabsData(tabs);
-          return tabs;
-        } else {
-          console.log("No tabs found in Monday storage.");
+      async function getTabsFromStorage() {
+        try {
+          const storageKey = generateStorageKey(context);
+          const tabsString = await getTabsData(storageKey);
+          if (tabsString) {
+            const tabs = JSON.parse(tabsString);
+            console.log("Tabs retrieved from Monday storage:", tabs);
+            setTabsData(tabs);
+            return tabs;
+          } else {
+            console.log("No tabs found in Monday storage.");
+            return [];
+          }
+        } catch (error) {
+          console.error("Error getting tabs from Monday storage:", error);
           return [];
         }
-      } catch (error) {
-        console.error("Error getting tabs from Monday storage:", error);
-        return [];
+      }
+
+      getTabsFromStorage();
+
+      const theme = context.theme;
+      if (theme === "dark") {
+        document.body.className = "dark-app-theme";
+      } else {
+        document.body.className = "";
       }
     }
-
-    getTabsFromStorage();
   }, [context]);
 
   const {
@@ -104,14 +111,12 @@ const App = () => {
       {tabsData.length === 0 ||
       (tabsData?.length === 1 && tabsData[0]?.mode === "add") ? (
         <InputForm
-          context={context}
           url={url}
           handleUrlChange={setUrl}
           handleUnfurl={() => handleUnfurl(url)}
         />
       ) : (
         <TabsUI
-          context={context}
           tabsData={tabsData}
           setActiveTabData={setActiveTabData}
           url={url}
